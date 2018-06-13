@@ -36,4 +36,13 @@ public class AccountService {
 				.filter(eachAccount -> eachAccount.getFirstName().equals(firstNameOfAccount)).count();
 	}
 
+	public String checkAccountNumbers() {
+		for (Account a : accountMap.values()) {
+			if (a.getAccountNumber().equals("9999")) {
+				return "This account is blocked";
+			}
+		}
+		return "No blocked accounts";
+	}
+
 }

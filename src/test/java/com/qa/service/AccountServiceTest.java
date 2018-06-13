@@ -12,6 +12,7 @@ public class AccountServiceTest {
 	private AccountService service;
 	private Account joeBloggs;
 	private Account janeBloggs;
+	private Account mrNineNine;
 	private JSONUtil util;
 
 	@Before
@@ -19,6 +20,7 @@ public class AccountServiceTest {
 		service = new AccountService();
 		joeBloggs = new Account("Joe", "Bloggs", "1234");
 		janeBloggs = new Account("Jane", "Bloggs", "1234");
+		mrNineNine = new Account("Nine", "Nine", "9999");
 		util = new JSONUtil();
 	}
 
@@ -56,6 +58,18 @@ public class AccountServiceTest {
 		Account joeGordon = new Account("Joe", "Gordon", "1234");
 		service.addAccountFromMap(joeGordon);
 		Assert.assertEquals(service.getNumberOfAccountWithFirstName("Joe"), 2);
+	}
+	
+	@Test
+	public void testCheckAccountNumbers() {
+		String value = "";
+		service.addAccountFromMap(joeBloggs);
+		service.addAccountFromMap(janeBloggs);
+		value = service.checkAccountNumbers();
+		Assert.assertEquals("No blocked accounts", value);
+		service.addAccountFromMap(mrNineNine);
+		value = service.checkAccountNumbers();
+		Assert.assertEquals("This account is blocked", value);
 	}
 
 }
