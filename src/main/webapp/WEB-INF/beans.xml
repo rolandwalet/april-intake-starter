@@ -5,7 +5,7 @@
 <!--  
 <alternatives>
 	<class>
-		com.qa.service.AccountService
+		com.qa.service.AccountServiceMapImpl
 	</class>
 </alternatives>
 -->

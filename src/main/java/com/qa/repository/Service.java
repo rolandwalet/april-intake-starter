@@ -1,4 +1,4 @@
-package com.qa.service;
+package com.qa.repository;
 
 public interface Service {
 	

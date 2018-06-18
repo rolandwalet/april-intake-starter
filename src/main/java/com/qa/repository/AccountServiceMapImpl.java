@@ -1,4 +1,4 @@
-package com.qa.service;
+package com.qa.repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,32 +11,36 @@ import com.qa.domain.Account;
 import com.qa.util.JSONUtil;
 
 @Alternative
-public class AccountServiceMapImpl implements Service{
+public class AccountServiceMapImpl implements Service {
 
 	private Map<Long, Account> accountMap;
-	
+
 	@Inject
 	private JSONUtil util;
-	
+
 	public AccountServiceMapImpl() {
 		accountMap = new HashMap<Long, Account>();
 	}
 
+	@Override
 	public String getAllAccounts() {
 		List<Account> allAccounts = (List<Account>) accountMap.values();
 		return util.getJSONForObject(allAccounts);
 	}
-	
+
+	@Override
 	public String getAccount(long id) {
 		return util.getJSONForObject(accountMap.get(id));
 	}
-	
+
+	@Override
 	public String createAccount(String account) {
 		Account userAccount = util.getObjectForJSON(account, Account.class);
 		accountMap.put(userAccount.getId(), userAccount);
 		return "{\"message\": \"Account successfully created\"}";
 	}
-	
+
+	@Override
 	public String updateAccount(long id, String account) {
 		boolean countExists = accountMap.containsKey(id);
 		if (!countExists) {
@@ -48,30 +52,19 @@ public class AccountServiceMapImpl implements Service{
 			return "{\"message\": \"Account updated!\"}";
 		}
 	}
-	
+
+	@Override
 	public String deleteAccount(long id) {
 		boolean countExists = accountMap.containsKey(id);
 		if (countExists) {
 			accountMap.remove(id);
 			return "{\"message\": \"Account deleted!\"}";
-		}
-		else return "{\"message\": \"ERROR: Account not found!\"}";
+		} else
+			return "{\"message\": \"ERROR: Account not found!\"}";
 	}
 
-	
-
-	public int getNumberOfAccountWithFirstName(String firstNameOfAccount) {
-		return (int) accountMap.values().stream()
-				.filter(eachAccount -> eachAccount.getFirstName().equals(firstNameOfAccount)).count();
-	}
-
-	public String checkAccountNumbers() {
-		for (Account a : accountMap.values()) {
-			if (a.getAccountNumber().equals("9999")) {
-				return "This account is blocked";
-			}
-		}
-		return "No blocked accounts";
+	public void setUtil(JSONUtil util) {
+		this.util = util;
 	}
 
 }

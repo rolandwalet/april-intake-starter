@@ -1,4 +1,4 @@
-package com.qa.service;
+package com.qa.repository;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
@@ -17,19 +17,26 @@ public class AccountServiceDBImpl implements Service {
 
 	@PersistenceContext(unitName = "primary")
 	private EntityManager manager;
-	
+
 	@Inject
 	private JSONUtil util;
 	
+	public AccountServiceDBImpl() {
+		
+	}
+	
+	@Override
 	public String getAllAccounts() {
 		TypedQuery<Account> query = manager.createQuery("SELECT a FROM Account a ORDER BY a.id", Account.class);
 		return util.getJSONForObject(query.getResultList());
 	}
 
+	@Override
 	public String getAccount(long id) {
 		return util.getJSONForObject(manager.find(Account.class, id));
 	}
 
+	@Override
 	@Transactional(REQUIRED)
 	public String createAccount(String account) {
 		Account newAccount = util.getObjectForJSON(account, Account.class);
@@ -37,6 +44,7 @@ public class AccountServiceDBImpl implements Service {
 		return "{\"message\": \"Account successfully created\"}";
 	}
 
+	@Override
 	@Transactional(REQUIRED)
 	public String updateAccount(long id, String account) {
 		Account accountToUpdate = manager.find(Account.class, id);
@@ -50,6 +58,7 @@ public class AccountServiceDBImpl implements Service {
 		}
 	}
 
+	@Override
 	@Transactional(REQUIRED)
 	public String deleteAccount(long id) {
 		if (manager.find(Account.class, id).equals(null)) {
@@ -58,4 +67,9 @@ public class AccountServiceDBImpl implements Service {
 		manager.remove(manager.find(Account.class, id));
 		return "{\"message\": \"Account deleted!\"}";
 	}
+	
+	public void setUtil(JSONUtil util) {
+		this.util = util;
+	}
+
 }
